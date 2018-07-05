@@ -1,0 +1,24 @@
+https://runtime.sagemaker.us-east-1.amazonaws.com/endpoints/decision-trees/invocations
+
+Resources deployed:
+  - Lambda ARN: arn:aws:lambda:us-east-1:141967547628:function:decision-trees-dev
+  - Rest API URL: https://fl9yzypnpf.execute-api.us-east-1.amazonaws.com/api/
+
+
+
+sudo pip install chalice boto3
+export AWS_DEFAULT_REGION=us-east-1
+wget https://s3.amazonaws.com/aws-machine-learning-blog/artifacts/decision-trees/decision-trees.tgz
+tar xzvf decision-trees.tgz --warning=no-unknown-keyword
+cd decision-trees
+
+
+aws s3api create-bucket --bucket <bucket name> --region us-east-1
+
+aws s3 website s3://<bucket name>/ --index-document index.html --error-document error.html
+
+wget https://s3.amazonaws.com/aws-machine-learning-blog/artifacts/decision-trees/index.html
+
+sed -i s@CHALICE_ENDPOINT@<your rest api URL>@g index.html
+
+aws s3 cp index.html s3://<bucket name>/index.html --grants read=uri=http://acs.amazonaws.com/groups/global/AllUsers
